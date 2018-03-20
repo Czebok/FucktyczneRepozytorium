@@ -1,0 +1,50 @@
+public interface Kształt{
+		
+		void rysuj();
+	}
+
+public class Kwadrat implements Ksztalt {
+
+	@Override
+	public void rysuj() {
+		System.out.println("Kwadrat to prostokat");
+		
+	}
+
+}
+public abstract class ShapeDecorator implements Ksztalt {
+	protected Ksztalt decoratedShape;
+	public ShapeDecorator( Ksztalt decoratedShape){
+		this.decoratedShape = decoratedShape;
+	}
+	public void rysuj(){
+		decoratedShape.rysuj();
+	}
+}
+
+public class RedShapeDecorator extends ShapeDecorator {
+
+		   public RedShapeDecorator(Shape decoratedShape) {
+		      super(decoratedShape);		
+		   }
+
+		   @Override
+		   public void rysuj() {
+		      decoratedShape.rysuj();	       
+		      setRedBorder(decoratedShape);
+		   }
+
+		   private void setRedBorder(Shape decoratedShape){
+		      System.out.println("Kolor buraczany");
+		   }
+		}
+
+public class DecoratorPatternDemo {
+   public static void main(String[] args) {
+ Shape CzerwonyKwadrat= new RedShapeDecorator(new Kwadrat());
+     
+
+      System.out.println("\n Buraczany kwadrat");
+      CzerwonyKwadrat.rysuj();
+   }
+}
