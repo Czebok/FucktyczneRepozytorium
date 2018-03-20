@@ -1,0 +1,24 @@
+import java.util.ArrayList;
+
+public class SINGLETON{
+	
+	private ArrayList<String> LISTa = null;
+
+	public ArrayList<String> wezLista(){
+		return LISTa;
+	}
+	
+	public void dodaj(String elem){
+		lista.add(elem);
+		}
+	
+	
+	private SINGLETON singletonInstance = new Singl();
+	
+	public SINGLETON wezInstance(){
+		return singletonInstance;
+	}
+	
+	
+
+}
