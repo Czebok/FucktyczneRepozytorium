@@ -1,0 +1,128 @@
+using System;
+
+namespace Chain_of_responsibility
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //TWORZENIE OGNIW ŁAŃCUCHA
+            NadzorcaPieniedzy Zdzichu = new Magister();
+            NadzorcaPieniedzy Roman = new Doktor();
+            NadzorcaPieniedzy Eustachy = new Profesor();
+
+            //TWORZENIE ŁAŃCUCHA
+            Zdzichu.UstawNadzorcaPieniedzy(Roman);
+            Roman.UstawNadzorcaPieniedzy(Eustachy);
+
+            // ZAPYTANIA O OBSLUZENIE PROSBY O GRANT
+            PrzyznanieGrnatuNaukowego daj = new PrzyznanieGrnatuNaukowego("Rozwoj sztucznej inteligencji", 3200, "Roman");
+            Roman.CzyNalezySieGrant(daj);
+
+            daj = new PrzyznanieGrnatuNaukowego("Prace nad nowym pierwiastkiem", 800, "Zdzichu");
+            Zdzichu.CzyNalezySieGrant(daj);
+
+            daj = new PrzyznanieGrnatuNaukowego("Eksperymenty medyczne", 15000, "Eustachy");
+            Eustachy.CzyNalezySieGrant(daj);
+
+            daj = new PrzyznanieGrnatuNaukowego("Prace nad promieniowaniem", 1322, "Zdzichu");
+            Zdzichu.CzyNalezySieGrant(daj);
+
+            daj = new PrzyznanieGrnatuNaukowego("NA NOWY EKSPRES DO KAWY", 8000, "Roman");
+            Roman.CzyNalezySieGrant(daj);
+
+            daj = new PrzyznanieGrnatuNaukowego("Na waciki", 9000,  "Eustachy");
+            Eustachy.CzyNalezySieGrant(daj);
+
+
+            Console.ReadKey();
+        }
+    }
+}
+class PrzyznanieGrnatuNaukowego
+
+    {
+
+        // KONSTRUKTOR
+        public PrzyznanieGrnatuNaukowego(string Cel, double kwota, string imie)
+        {
+            
+            JakieBadania = Cel;
+            ZaIleKasy = kwota;
+            ImiePracownika = imie;
+            
+            
+
+        Console.WriteLine("Podanie o grant naukowy na badania " + JakieBadania + " na kwote " + ZaIleKasy + "zl od: " + ImiePracownika);
+        }
+
+        public string JakieBadania { get; set; }
+        public double ZaIleKasy { get; set; }
+        public string ImiePracownika { get; set; }
+
+}
+
+    // TWORZENIE NASTEPNIKA DO OGNIWA ŁAŃCUCHA
+    abstract class NadzorcaPieniedzy
+    {
+        protected NadzorcaPieniedzy TytułNaukowyWyzszy;
+
+        public void UstawNadzorcaPieniedzy(NadzorcaPieniedzy TytułNaukowyWyzszy)
+        {
+            this.TytułNaukowyWyzszy = TytułNaukowyWyzszy;
+        }
+
+        public abstract void CzyNalezySieGrant(PrzyznanieGrnatuNaukowego BadaniaKaska);
+    }
+
+    // OBSŁUŻENIE ZAPYTAŃ O GRANTY DLA KAŻDEGO OGNIWA
+    class Magister : NadzorcaPieniedzy
+    {
+        
+        public override void CzyNalezySieGrant(PrzyznanieGrnatuNaukowego BadaniaKaska)
+        {
+            if (BadaniaKaska.ZaIleKasy < 1000)
+            {
+               
+                Console.WriteLine("Zrealizowano grant na kwote: " + (BadaniaKaska.ZaIleKasy) + " przez " + this.GetType().Name + "'a" + " " + BadaniaKaska.ImiePracownika + "'a");
+            }
+            else if (TytułNaukowyWyzszy != null)
+            {
+                TytułNaukowyWyzszy.CzyNalezySieGrant(BadaniaKaska);
+            }
+        }
+    }
+
+    
+    
+    class Doktor : NadzorcaPieniedzy
+    {
+        public override void CzyNalezySieGrant(PrzyznanieGrnatuNaukowego BadaniaKaska)
+        {
+            if (BadaniaKaska.ZaIleKasy < 3500)
+            {
+                Console.WriteLine("Zrealizowano grant na kwote: " + (BadaniaKaska.ZaIleKasy) + " przez " + this.GetType().Name + "'a" + " " + BadaniaKaska.ImiePracownika + "'a");
+            }
+            else if (TytułNaukowyWyzszy != null)
+            {
+                TytułNaukowyWyzszy.CzyNalezySieGrant(BadaniaKaska);
+            }
+        }
+    }
+
+    class Profesor : NadzorcaPieniedzy
+    {
+        public override void CzyNalezySieGrant(PrzyznanieGrnatuNaukowego BadaniaKaska)
+        {
+            if (BadaniaKaska.ZaIleKasy < 10000)
+            {
+                Console.WriteLine("Zrealizowano grant na kwote: " + (BadaniaKaska.ZaIleKasy) + " przez " + this.GetType().Name + "'a" + " " + BadaniaKaska.ImiePracownika + "'a");
+            }
+            else
+            {
+                Console.WriteLine("NIE PRZYZNANO GRANTU, ZA DUŻA KWOTA");
+            }
+        }
+    }
+
+    
