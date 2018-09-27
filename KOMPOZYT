@@ -1,0 +1,142 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    abstract class Component
+    {
+        public Component() { }
+
+        public abstract void Operacja();
+
+        public abstract void Dodaj(Component c);
+
+        public abstract void Usun(Component c);
+
+        public abstract bool CzyKompozyt();
+    }
+
+    class Composite : Component
+    {
+        List<Component> children = new List<Component>();
+
+        public Composite()
+        {
+
+        }
+
+        public override void Dodaj(Component component)
+        {
+            children.Add(component);
+        }
+
+        public override void Usun(Component component)
+        {
+            children.Remove(component);
+        }
+
+        public override bool CzyKompozyt()
+        {
+            return true;
+        }
+
+        public override void Operacja()
+        {
+            int i = 0;
+
+            Console.Write("Gałąź(");
+            foreach (Component component in children)
+            {
+                component.Operacja();
+                if (i != children.Count - 1)
+                {
+                    Console.Write("+");
+                }
+                i++;
+            }
+            Console.Write(")");
+        }
+    }
+
+    class Lisc : Component
+    {
+        public Lisc()
+        {
+
+        }
+
+        public override void Operacja()
+        {
+            Console.Write("Lisc");
+        }
+
+        public override void Dodaj(Component component)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Usun(Component component)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool CzyKompozyt()
+        {
+            return false;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Client client = new Client();
+
+            Component leaf = new Lisc();
+            Console.WriteLine("Prosty komponent:");
+            client.ClientCode(leaf);
+            Console.WriteLine("\n");
+
+            Composite tree = new Composite();
+            Composite branch1 = new Composite();
+            branch1.Dodaj(new Lisc());
+            branch1.Dodaj(new Lisc());
+            Composite branch2 = new Composite();
+            branch2.Dodaj(new Lisc());
+            tree.Dodaj(branch1);
+            tree.Dodaj(branch2);
+            Console.WriteLine("Proste drzewo");
+            client.ClientCode(tree);
+            Console.WriteLine("\n");
+
+            Console.Write("Mogę połączyć dwa obiekty\n");
+            client.ClientCode2(tree, leaf);
+
+            Console.ReadLine();
+        }
+    }
+
+    class Client
+    {
+        public void ClientCode(Component leaf)
+        {
+            Console.Write("Wynik: ");
+            leaf.Operacja();
+        }
+
+        public void ClientCode2(Component component1, Component component2)
+        {
+            if (component1.CzyKompozyt())
+            {
+                component1.Dodaj(component2);
+            }
+            Console.Write("Wynik: ");
+            component1.Operacja();
+
+            Console.WriteLine();
+        }
+    }
+}
