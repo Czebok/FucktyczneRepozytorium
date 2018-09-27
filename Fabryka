@@ -1,0 +1,74 @@
+using System;
+namespace FabrykaCzipsy
+{
+  
+    public interface ICzipsy
+    {
+
+        void Ilosc(int gramy);
+    }
+
+    
+    public class paprykowe : ICzipsy
+    {
+        public void Ilosc(int gramy)
+        {
+            Console.WriteLine("Paprykowe : " + gramy.ToString() + "g.");
+        }
+    }
+
+   
+    public class zielonaCebulka : ICzipsy
+    {
+
+        public void Ilosc(int gramy)
+        {
+
+
+
+            Console.WriteLine("Zielona Cebulka : " + gramy.ToString() + "g.");
+        }
+    }
+
+
+    public abstract class ProdukcjaCzipsow
+    {
+        public abstract ICzipsy GetCzipsy(string czipsy);
+
+    }
+
+
+    public class OksztynskaProdukcjaCzipsow : ProdukcjaCzipsow
+    {
+        public override ICzipsy GetCzipsy(string czipsy)
+        {
+            switch (czipsy)
+            {
+                case "Paprykowe":
+                    return new paprykowe();
+                case "Zielona Cebulka":
+                    return new zielonaCebulka();
+                default:
+                    throw new ApplicationException(string.Format("Nie ma takiego smaku jak: " + czipsy));
+            }
+        }
+
+    }
+
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ProdukcjaCzipsow fabryczka = new OksztynskaProdukcjaCzipsow();
+
+            ICzipsy Dobrepaprykowe = fabryczka.GetCzipsy("Paprykowe");
+            ICzipsy SrednieZielonaCebulka = fabryczka.GetCzipsy("Zielona Cebulka");
+
+            SrednieZielonaCebulka.Ilosc(10);
+            Dobrepaprykowe.Ilosc(24);
+            Console.ReadKey();
+
+        }
+    }
+}
